@@ -65,6 +65,8 @@ Miro url Link: **https://miro.com/welcomeonboard/Yk1vZDg0MkJpSEtRQkhYUGozOUNnNG9
 ## Scrum Board Setup
 
 We use **GitHub Projects** for task management.
+[GitHub Project Board] https://github.com/users/BodeMurairi2/projects/1/views/1
+
 
 ### Initial Columns
 
