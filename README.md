@@ -4,6 +4,7 @@ Enterprise-level fullstack app for processing MoMo SMS data in XML.
 Includes data cleaning, categorization, storage in a relational DB, and a frontend for analysis & visualization.  
 Focuses on Agile workflows, team setup, and system architecture.  
 
+Team: Summus Scriptus
  Date: 2025-09-09  
 
 ---
@@ -106,7 +107,7 @@ We use **GitHub Projects** for task management.
 
 ## Contributors and Group Name
 
-This project is collaboratively developed by:
+This project is collaboratively developed by Summus Scriptus:
 
 * **Pascal Nsigo**
 * **Maurice Nshimyumukiza**
