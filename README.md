@@ -56,6 +56,12 @@ This project also emphasizes **collaborative workflows** through GitHub, Scrum, 
 
 ---
 
+## Architecture 
+
+Miro url Link: **https://miro.com/welcomeonboard/M0VXY2QvbzVhM1o2Yk5SWDFBMTBMenZpa3d4bU5kQWxlZXRRaXBQZjlqTm4wY1lYUVlqR1loMEN2MVBUQzJ3TjFic3k0REp6emtxa2ZlUTdhNHJOZU1NZU9IUTRHM2RHcUNMcjN6LzBUM1FVMVIzMk1mVU1ScVY5ZnRzUjdyaU5nbHpza3F6REdEcmNpNEFOMmJXWXBBPT0hdjE=?share_link_id=300637743210**
+
+---
+
 ## Scrum Board Setup
 
 We use **GitHub Projects** (or Trello/Jira) for task management.
