@@ -10,6 +10,7 @@ Team: Summus Scriptus
 ---
 
 ## Oriantations
+
  You will find the **ERD MOMO SMS Documentation file** and 
  the **Lucidchat Architecture Picture** in the directory named **"Documentation_file_and_ERD"** 
 
