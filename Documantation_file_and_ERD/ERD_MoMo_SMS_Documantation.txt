@@ -1,0 +1,24 @@
+
+SMART Savings (ERD) Documentation
+
+The Entity Relationship Diagram (ERD) below is the data architecture of the SMART Savings app. The function of the system is to guide users in setting and meeting saving goals that are  Specific, Measurable, Attainable, Realistic, and Time-bound (SMART). The database, via its holding of transactional data, user details, and saving-account balances, enables the application to report income, recommend savings per month, and remind through pushing notifications to users on target progress.
+
+Moreover, Entities and roles
+ customers 
+stores customer information and contact details like ID(s), phone_number, names, etc).
+savings_account
+Is an exclusive wallet or linked bank account reserved for savings. Note that, there may be one or many savings_account rows per customer and they may have many transactions.
+transactions
+Tracks all in-app or Mobile-money transactions storing deposits, withdrawals, transfers, and salary deductions. This makes it possible to see exactly when and how money moved. Allowig the app to project future savings and monitor account health.
+
+
+
+
+transaction_categories
+Enumerates the category of every transaction (airtime, merchant, transfer, saving deposit, etc.). To report and compute statistics, categorizing the transactions accordingly.
+
+Finally, system_logs 
+Provides operational transparency: ingestion, calculations, and alert notifications can be traced to specific transactions, improving reliability and accountability.
+
+ERD Design Justification for the SMART Savings Application
+We chose this ERD design to give the SMART Savings app a clear, scalable structure. It separates customers, savings_account, transactions, transaction_categories, and system_logs. Customers store identity data, while savings_account isolates goal balances from daily funds. Transactions record every movement with balance_after for projections and audits, and categories add meaning for analytics. Logs ensure operational transparency. This normalization preserves data integrity, supports multiple goals, and adapts easily—overall making it our best foundation for tracking savings and helping users achieve SMART financial goals.
