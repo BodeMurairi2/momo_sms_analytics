@@ -8,8 +8,6 @@ import xml.etree.ElementTree as ET
 import re
 from typing import Any
 
-momo_data = ET.parse("/home/bode-murairi/Documents/programming/ALU/momo_sms_analytics/api/data/momo.xml")
-
 def get_messages(data):
     """This function get all messages"""
     all_data = data.findall("sms")
@@ -74,3 +72,19 @@ class TransactionMessages:
     def get_total_messages(self):
         """get the number of total messages"""
         return f"Total Messages: {len(self.__all_messages)}"
+
+momo_data = ET.parse("/home/bode-murairi/Documents/programming/ALU/momo_sms_analytics/api/data/momo.xml")
+all_messages = get_messages(data=momo_data)
+user_transaction = TransactionMessages(messages=all_messages)
+
+sum_messages = (
+    len(user_transaction.get_momo_income(all_messages)) +
+    len(user_transaction.get_atransaction(all_messages)) +
+    len(user_transaction.get_bank_income(all_messages)) +
+    len(user_transaction.get_transfer(all_messages)) +
+    len(user_transaction.get_umaze(all_messages)) +
+    len(user_transaction.get_payment(all_messages)) +
+    len(user_transaction.get_withdrawn(all_messages))
+)
+print(f"Total categorized messages: {sum_messages}")
+print(user_transaction.get_total_messages())
