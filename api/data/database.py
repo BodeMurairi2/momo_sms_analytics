@@ -27,10 +27,9 @@ class Transaction(Base):
     transaction_id = Column(Integer, primary_key=True, autoincrement=True)
     type = Column(String(100), nullable=False)
     amount = Column(Float, nullable=False)
-    date = Column(Date, nullable=False)
-    timestamp = Column(DateTime, default=datetime.utcnow)
     transaction_date = Column(DateTime)
-
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    
 class Expenses(Base):
     """This table stores all the transactions that are expenses"""
     __tablename__ = "Expenses"
