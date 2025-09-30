@@ -65,8 +65,8 @@ class GetBankIncome:
             "sender_name": sender_name,
             "phone_number": phone_number,
             "amount": amount,
-            "currency": currency,
             "balance_after": balance_after,
+            "currency": currency,
             "transaction_datetime": transaction_datetime,
             "type": type
         }

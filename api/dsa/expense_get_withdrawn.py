@@ -61,12 +61,12 @@ class GetWithdrawn:
         transaction_type = ["Withdrawn"] * len(amount)
         return {
             "beneficiary_name": beneficiary_name,
-            "beneficiary_phone": beneficiary_phone,
+            "beneficiary_phone_number": beneficiary_phone,
             "amount":amount,
             "fee_paid": fee_paid,
+            "balance_after": balance_after,
             "currency": currency,
             "type": transaction_type,
-            "balance_after": balance_after,
             "transaction_datetime": transaction_datetime
         }
 

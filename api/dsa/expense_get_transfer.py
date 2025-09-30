@@ -5,10 +5,13 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 from dsa.extract import TransactionMessages, get_messages
 
+all_messages = get_messages(data=ET.parse("/home/bode-murairi/Documents/programming/ALU/momo_sms_analytics/api/data/momo.xml")) 
+user_transaction = TransactionMessages(all_messages)
+
 class GetTransfer:
     """This class extracts Momo-to-Momo transaction information"""
-    def __init__(self, transaction):
-        self.transaction = transaction
+    def __init__(self):
+        self.transaction = user_transaction
     
     def get_transfer(self):
         """Extract transaction info using regex and convert dates to datetime objects"""
@@ -63,6 +66,7 @@ class GetTransfer:
             else None
             for sms in sms_transaction
         ]
+        tr_type = ["Transfer"] * len(transaction_datetime)
 
         return {
             "beneficiary_name": beneficiary_name,
@@ -71,9 +75,9 @@ class GetTransfer:
             "fee_paid": fee_paid,
             "balance_after": balance_after,
             "currency": currency,
+            "type": tr_type,
             "transaction_datetime": transaction_datetime
         }
-
 
 if __name__ == "__main__":
     all_messages = get_messages(data=ET.parse("/home/bode-murairi/Documents/programming/ALU/momo_sms_analytics/api/data/momo.xml")) 

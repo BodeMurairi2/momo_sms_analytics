@@ -27,20 +27,21 @@ class GetUmazeKugura:
         beneficiary_name = ["Umaze Kugura"] * len(amount)
         beneficiary_phone = ["Unknown"] * len(amount)
         fee_paid = [0] * len(amount)
-        type_ = ["Data Bundles"] * len(amount)
+        balance_after = [0] * len(amount)
+        tr_type = ["Data Bundles"] * len(amount)
         currency = ["RWF"] * len(amount)
 
         transaction_datetime = [
             datetime.strptime("12-05-2025 16:25", "%d-%m-%Y %H:%M")
         ] * len(amount)
-
         return {
             "beneficiary_name": beneficiary_name,
-            "beneficiary_phone": beneficiary_phone,
-            "fee_paid": fee_paid,
+            "beneficiary_phone_number": beneficiary_phone,
             "amount": amount,
+            "fee_paid": fee_paid,
+            "balance_after": balance_after,
             "currency": currency,
-            "type": type_,
+            "type": tr_type,
             "transaction_datetime": transaction_datetime
         }
 

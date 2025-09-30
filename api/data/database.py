@@ -40,7 +40,7 @@ class Expenses(Base):
     beneficiary_phone_number = Column(String)
     amount = Column(Float, nullable=False)
     fee_paid = Column(Float, nullable=False)
-    balance_after = Column(Float, nullable=False)
+    balance_after = Column(Float, nullable=False, default=0.0)
     currency = Column(String(50), default="RWF")
     type = Column(String(50), nullable=False)
     transaction_date = Column(DateTime)

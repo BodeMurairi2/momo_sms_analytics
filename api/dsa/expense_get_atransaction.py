@@ -5,10 +5,13 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 from dsa.extract import TransactionMessages, get_messages
 
+all_messages = get_messages(data=ET.parse("/home/bode-murairi/Documents/programming/ALU/momo_sms_analytics/api/data/momo.xml"))
+user_transaction = TransactionMessages(all_messages)
+
 class GetATransaction:
-    """This class to extract A transaction"""
-    def __init__(self, transaction):
-        self.transaction = transaction
+    """This class extracts A transaction"""
+    def __init__(self):
+        self.transaction = user_transaction
     
     def get_a_transaction(self):
         """Extract transaction info using regex and convert dates to datetime objects"""
@@ -33,7 +36,7 @@ class GetATransaction:
             float(re.search(r"transaction of (\d+(?:,\d{3})*) RWF", sms).group(1).replace(',', ''))
             if re.search(r"transaction of (\d+(?:,\d{3})*) RWF", sms) else None
             for sms in sms_transaction
-            ]
+        ]
         
         # Fee paid
         fee_paid = [
@@ -48,22 +51,32 @@ class GetATransaction:
             if re.search(r"New balance is (\d+(?:,\d{3})*) RWF", sms, re.IGNORECASE) else None
             for sms in sms_transaction  
         ]
+
         # Currency
         currency = ["RWF" if "RWF" in sms else None for sms in sms_transaction] 
+
         # Transaction date
         transaction_date = [
             datetime.strptime(re.search(r"\b\d{4}-\d{2}-\d{2}\b", sms).group(0), "%Y-%m-%d")
-                if re.search(r"\b\d{4}-\d{2}-\d{2}\b", sms) else None
+            if re.search(r"\b\d{4}-\d{2}-\d{2}\b", sms) else None
             for sms in sms_transaction
         ]   
 
         # Transaction time
         transaction_time = [
-            datetime.strptime(
-                re.search(r"\b\d{2}:\d{2}:\d{2}\b", sms).group(0), "%H:%M:%S"
-                ) if re.search(r"\b\d{2}:\d{2}:\d{2}\b", sms) else None
+            datetime.strptime(re.search(r"\b\d{2}:\d{2}:\d{2}\b", sms).group(0), "%H:%M:%S").time()
+            if re.search(r"\b\d{2}:\d{2}:\d{2}\b", sms) else None
             for sms in sms_transaction
         ]
+
+        # Combine date and time into one datetime
+        transaction_datetime = [
+            datetime.combine(d, t) if d and t else None
+            for d, t in zip(transaction_date, transaction_time)
+        ]
+
+        tr_type = ["ATransaction"] * len(amount)
+
         return {
             "beneficiary_name": beneficiary_name,
             "beneficiary_phone_number": beneficiary_phone_number,
@@ -71,9 +84,10 @@ class GetATransaction:
             "fee_paid": fee_paid,
             "balance_after": balance_after,
             "currency": currency,
-            "transaction_date": transaction_date,
-            "transaction_time": transaction_time
-        }   
+            "type": tr_type,
+            "transaction_datetime": transaction_datetime
+        }
+
 if __name__ == "__main__":
     all_messages = get_messages(data=ET.parse("/home/bode-murairi/Documents/programming/ALU/momo_sms_analytics/api/data/momo.xml"))
     user_transaction = TransactionMessages(all_messages)
