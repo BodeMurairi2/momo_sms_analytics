@@ -30,8 +30,6 @@ class Transaction(Base):
     date = Column(Date, nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
     transaction_date = Column(DateTime)
-    transaction_time = Column(DateTime)
-
 
 class Expenses(Base):
     """This table stores all the transactions that are expenses"""
@@ -44,9 +42,8 @@ class Expenses(Base):
     fee_paid = Column(Float, nullable=False)
     balance_after = Column(Float, nullable=False)
     currency = Column(String(50), default="RWF")
+    type = Column(String(50), nullable=False)
     transaction_date = Column(DateTime)
-    transaction_time = Column(DateTime)
-
 
 class Income(Base):
     """This table stores all transactions that are incomes"""
@@ -58,5 +55,5 @@ class Income(Base):
     amount = Column(Float, nullable=False)
     balance_after = Column(Float, nullable=False)
     currency = Column(String(50), default="RWF")
+    type = Column(String(50), nullable=False)
     transaction_date = Column(DateTime)
-    transaction_time = Column(DateTime)

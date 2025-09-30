@@ -3,76 +3,75 @@
 """
 This script handles saving all income to the database
 """
-import xml.etree.ElementTree as ET
+
+from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from data.database import Income
 from dsa.income_momo import GetMomoIncome
 from dsa.income_bank import GetBankIncome
-from dsa.extract import TransactionMessages, get_messages
-
-# Parse Momo messages
-momo_data = ET.parse("/home/bode-murairi/Documents/programming/ALU/momo_sms_analytics/api/data/momo.xml")
-all_messages = get_messages(data=momo_data)
-user_transaction = TransactionMessages(messages=all_messages)
 
 # Create database engine
-engine = create_engine('sqlite:///databases/momo.db')
+db_path = Path(__file__).resolve().parent / "databases/momo.db"
+engine = create_engine(f'sqlite:///{db_path}')
 
 # Create a session
 Session = sessionmaker(bind=engine)
 session = Session()
 
+
 class SaveIncome:
     """Generic class to save income information to the database"""
 
-    def __init__(self, income_class, transaction):
+    def __init__(self, income_class):
         """
-        income_class: ORM class (GetMomoIncome, GetBankIncome, etc.)
-        transaction: TransactionMessages object containing parsed data
+        income_class: dictionary containing parsed transaction data
         """
         self.income_class = income_class
-        self.transaction = transaction
 
     def save_income(self):
         """Save all income records to the database"""
-        for name, phone, amount, balance, currency, tr_date, tr_time in zip(
-            self.transaction["sender_name"],
-            self.transaction["phone_number"],
-            self.transaction["amount"],
-            self.transaction["balance_after"],
-            self.transaction["currency"],
-            self.transaction["transaction_date"],
-            self.transaction["transaction_time"]
+        for name, phone, amount, balance, currency, tr_datetime, tr_type in zip(
+            self.income_class["sender_name"],
+            self.income_class["phone_number"],
+            self.income_class["amount"],
+            self.income_class["balance_after"],
+            self.income_class["currency"],
+            self.income_class["transaction_datetime"],
+            self.income_class["type"]
         ):
-            record = self.income_class(
+            record = Income(
                 sender_name=name,
-                sender_phone=phone,
+                sender_phone_number=phone,
                 amount=amount,
                 balance_after=balance,
                 currency=currency,
-                transaction_date=tr_date,
-                transaction_time=tr_time
+                transaction_date=tr_datetime,
+                type=tr_type
             )
             session.add(record)
 
         session.commit()
         session.close()
 
+
 class SaveIncomeMomo(SaveIncome):
-    """Save momo Income"""
-    def __init__(self, transaction):
-        super().__init__(GetMomoIncome, transaction)
+    """Save Momo Income"""
+    def __init__(self):
+        momo_income = GetMomoIncome()
+        super().__init__(momo_income.get_income_momo())
 
 
 class SaveIncomeBank(SaveIncome):
-    """Save bank income"""
-    def __init__(self, transaction):
-        super().__init__(GetBankIncome, transaction)
+    """Save Bank income"""
+    def __init__(self):
+        bank_income = GetBankIncome()
+        super().__init__(bank_income.get_bank_income())
 
 
 # Save income
-save_momo = SaveIncomeMomo(user_transaction)
-save_bank = SaveIncomeBank(user_transaction)
+save_momo = SaveIncomeMomo()
+save_bank = SaveIncomeBank()
 
 save_momo.save_income()
 save_bank.save_income()

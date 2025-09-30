@@ -5,13 +5,18 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 from dsa.extract import TransactionMessages, get_messages
 
+MOMO_DATA = ET.parse("/home/bode-murairi/Documents/programming/ALU/momo_sms_analytics/api/data/momo.xml")
+all_messages = get_messages(data=MOMO_DATA)
+user_transaction = TransactionMessages(messages=all_messages)
+
 class GetMomoIncome:
-    """This class extract momo to momo transaction"""
-    def __init__(self, transaction):
-        self.transaction = transaction
+    """This class extracts momo to momo transactions"""
+
+    def __init__(self):
+        self.transaction = user_transaction
     
     def get_income_momo(self):
-        """Extract transaction info using regex and convert dates to datetime objects"""
+        """Extract transaction info and combine date/time into one datetime column"""
         sms_transaction = self.transaction.get_momo_income(messages=all_messages)
         
         # Sender name
@@ -24,16 +29,17 @@ class GetMomoIncome:
         # Phone number (keep original regex)
         phone_number = [
             (re.search(r"\((\*+\d+)\)", sms).group(1)
-             if re.search(r"\((\*+\d+)\)", sms) else None)
-            for sms in sms_transaction
-        ]
+             if re.search(r"\((\*+\d+)\)", sms) else "*UNKNOWN*")
+             for sms in sms_transaction
+             ]
+
 
         # Amount
         amount = [
             float(re.search(r"You have received\s+([\d,]+)\s+RWF", sms).group(1).replace(',', ''))
             if re.search(r"You have received\s+([\d,]+)\s+RWF", sms) else None
             for sms in sms_transaction
-            ]
+        ]
 
         # Balance after
         balance_after = [
@@ -44,26 +50,18 @@ class GetMomoIncome:
 
         # Currency
         currency = ["RWF" if "RWF" in sms else None for sms in sms_transaction]
-        
-        # Transaction date
-        transaction_date = [
-            datetime.strptime(
-                re.search(r"at\s+(\d{4}-\d{2}-\d{2})\s+\d{2}:\d{2}:\d{2}", sms).group(1),
-                "%Y-%m-%d"
-                ).date()
-                if re.search(r"at\s+(\d{4}-\d{2}-\d{2})\s+\d{2}:\d{2}:\d{2}", sms) else None
-                for sms in sms_transaction
-                ]
 
-        # Transaction time
-        transaction_time = [
+        # Combined transaction datetime
+        transaction_datetime = [
             datetime.strptime(
-                re.search(r"at\s+\d{4}-\d{2}-\d{2}\s+(\d{2}:\d{2}:\d{2})", sms).group(1),
-                "%H:%M:%S"
-                ).time()
-                if re.search(r"at\s+\d{4}-\d{2}-\d{2}\s+(\d{2}:\d{2}:\d{2})", sms) else None
-                for sms in sms_transaction
-                ]
+                re.search(r"at\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})", sms).group(1),
+                "%Y-%m-%d %H:%M:%S"
+            )
+            if re.search(r"at\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})", sms) else None
+            for sms in sms_transaction
+        ]
+
+        type = ["M-Money Transaction"] * len(currency)
 
         return {
             "sender_name": sender_name,
@@ -71,8 +69,10 @@ class GetMomoIncome:
             "amount": amount,
             "balance_after": balance_after,
             "currency": currency,
-            "transaction_date": transaction_date,
-            "transaction_time": transaction_time
+            "transaction_datetime": transaction_datetime,
+            "type": type
         }
+
 if __name__ == "__main__":
-    get_momo_income = GetMomoIncome(transaction=user_transaction)
+    get_momo_income = GetMomoIncome()
+    print(get_momo_income.get_income_momo())

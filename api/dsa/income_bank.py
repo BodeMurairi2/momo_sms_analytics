@@ -1,18 +1,22 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
 
 import re
 import xml.etree.ElementTree as ET
 from dsa.extract import TransactionMessages, get_messages
 from datetime import datetime
 
-class GetBankIncome:
-    """This class get momo transaction income """
+MOMO_DATA = ET.parse("/home/bode-murairi/Documents/programming/ALU/momo_sms_analytics/api/data/momo.xml")
+all_messages = get_messages(data=MOMO_DATA)
+user_transaction = TransactionMessages(messages=all_messages)
 
-    def __init__(self, transaction):
-        self.transaction = transaction
+class GetBankIncome:
+    """This class gets bank transaction income"""
+
+    def __init__(self):
+        self.transaction = user_transaction
 
     def get_bank_income(self):
-        """Extract transaction info using regex and keep date/time separate"""
+        """Extract transaction info and combine date/time into one datetime column"""
 
         sms_transaction = self.transaction.get_bank_income(messages=all_messages)
 
@@ -43,29 +47,30 @@ class GetBankIncome:
             if (match := re.search(r"Your NEW BALANCE\s*:(\d+) \w+", sms))
         ]
 
-        # transaction date
-        transaction_date = [
-            match.group(1)
+        # transaction datetime (combine date + time)
+        transaction_datetime = [
+            datetime.strptime(
+                f"{date_match.group(1)} {time_match.group(1)}", "%Y-%m-%d %H:%M:%S"
+            )
             for sms in sms_transaction
-            if (match := re.search(r"(\d{4}-\d{2}-\d{2})", sms))
+            if (
+                (date_match := re.search(r"(\d{4}-\d{2}-\d{2})", sms))
+                and (time_match := re.search(r"(\d{2}:\d{2}:\d{2})", sms))
+            )
         ]
 
-        # transaction time
-        transaction_time = [
-            match.group(1)
-            for sms in sms_transaction
-            if (match := re.search(r"(\d{2}:\d{2}:\d{2})", sms))
-        ]
+        type = ["Bank Transfer"] * len(currency)
 
         return {
             "sender_name": sender_name,
-            "sender_phone_number": phone_number,
+            "phone_number": phone_number,
             "amount": amount,
             "currency": currency,
             "balance_after": balance_after,
-            "transaction_date": transaction_date,
-            "transaction_time": transaction_time
+            "transaction_datetime": transaction_datetime,
+            "type": type
         }
 
 if __name__ == "__main__":
-    bank_income = GetBankIncome(transaction=user_transaction)
+    bank_income = GetBankIncome()
+    print(bank_income.get_bank_income())
