@@ -21,7 +21,7 @@ session = Session()
 
 
 class SaveIncome:
-    """Generic class to save income information to the database"""
+    """class to save income information to the database"""
 
     def __init__(self, income_class):
         """
@@ -69,7 +69,6 @@ class SaveIncomeBank(SaveIncome):
         super().__init__(bank_income.get_bank_income())
 
 
-# Save income
 save_momo = SaveIncomeMomo()
 save_bank = SaveIncomeBank()
 

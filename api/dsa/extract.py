@@ -62,9 +62,9 @@ class TransactionMessages:
             return []
         return [message for message in self.__all_messages if re.findall(pattern="A transaction", string=message, flags=re.I)]
 
-    def get_umaze(self, messges) -> list[str]:
+    def get_umaze(self, messages) -> list[str]:
         """Get all umaze messages"""
-        if not self.check_messages(messges):
+        if not self.check_messages(messages):
             return []
         return [message for message in self.__all_messages if re.search("Umaze kugura", message, re.I)]
 
@@ -76,5 +76,5 @@ if __name__ == "__main__":
     momo_data = ET.parse("/home/bode-murairi/Documents/programming/ALU/momo_sms_analytics/api/data/momo.xml")    
     all_messages = get_messages(data=momo_data)
     user_transaction = TransactionMessages(messages=all_messages)
-    for pay in user_transaction.get_momo_income(messages=all_messages):
+    for pay in user_transaction.get_withdrawn(messages=all_messages):
         print(f"{pay}\n")
