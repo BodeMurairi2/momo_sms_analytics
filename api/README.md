@@ -183,7 +183,9 @@ curl -i -X DELETE http://localhost:8000/transactions/5 \
 curl -i -X GET http://127.0.0.1:8000/transactions/summary \
   -u "bodemurairi2@gmail.com:Bode200"
 ```
-
+```
+  Path to the test script: api/services/test_transactions.py
+```
 ---
 
 ## Contact
