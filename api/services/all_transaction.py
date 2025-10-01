@@ -32,7 +32,7 @@ def classify_transaction(transaction: str) -> str:
 def get_transactions():
     """Retrieve all transactions"""
     all_transaction = session.query(Transaction).all()
-    return [{"status": "success"}] + [
+    response = [{"status": "success"}] + [
         {
             "id": transaction.transaction_id,
             "transaction_timestamp": f"{str(transaction.timestamp).split()[0]} {str(transaction.timestamp).split()[1][:5]}",
@@ -46,7 +46,7 @@ def get_transactions():
         }
         for transaction in all_transaction
     ]
-
+    return response
 
 def get_transaction(transaction_id: int):
     """Return a specific transaction"""
