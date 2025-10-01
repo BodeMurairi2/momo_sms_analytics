@@ -4,12 +4,18 @@ from pathlib import Path
 from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from data.database import Transaction
-from dsa.extract_all_transaction import AllTransactions
+from data.create_database.database import Transaction
+from dsa.extract.extract_all_transaction import AllTransactions
+
+# Dynamically determine database path relative to the project
+BASE_DIR = Path(__file__).resolve().parent.parent / "create_database" / "databases"
+DB_PATH = BASE_DIR / "momo.db"
+
+# Make sure the database folder exists
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 # Create database engine
-db_path = Path(__file__).resolve().parent / "databases/momo.db"
-engine = create_engine(f"sqlite:///{db_path}")
+engine = create_engine(f"sqlite:///{DB_PATH}")
 
 # Create a session factory
 Session = sessionmaker(bind=engine)

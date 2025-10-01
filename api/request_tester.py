@@ -1,14 +1,26 @@
 #!/usr/bin/env python3
 
 import requests
+from datetime import datetime
 
-# Transaction data to send
-transaction_id = 20
+
+# Transaction data to update
+transaction_data = {
+    "type": "payment",
+    "transaction_date": "2024-06-08 15:28",
+    "amount": 2500
+}
+
+# Authentication credentials
+email = "b.murairi@alustudent.com"
+password = "bode200"
 
 try:
-    # Send PUT request to /transactions/{id}
-    response = requests.delete(
-        url=f"http://localhost:8000/transactions/{transaction_id}",
+    # Send PUT request to /transactions/{id} with Basic Auth
+    response = requests.post(
+        url=f"http://localhost:8000/transactions",
+        json=transaction_data,
+        auth=(email, password),
         timeout=30
     )
 

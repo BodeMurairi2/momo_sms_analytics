@@ -3,7 +3,7 @@
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from data.database import Base
+from data.create_database.database import Base
 
 # Database setup
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))

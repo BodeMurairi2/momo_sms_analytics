@@ -3,11 +3,14 @@
 """Extract all transactions"""
 import re
 import xml.etree.ElementTree as ET
+from pathlib import Path
 from typing import Any, Dict, List
 
-MOMO_XML = ET.parse(
-    "/home/bode-murairi/Documents/programming/ALU/momo_sms_analytics/api/data/momo.xml"
-)
+# Dynamically determine the path to momo.xml relative to this script
+BASE_DIR = Path(__file__).resolve().parent
+MOMO_XML_PATH = BASE_DIR / "momo.xml"
+MOMO_XML = ET.parse(MOMO_XML_PATH)
+
 
 def get_messages(xml_data):
     """Get all SMS messages from the XML file"""
@@ -16,7 +19,9 @@ def get_messages(xml_data):
         return []
     return [node.attrib["body"] for node in sms_nodes]
 
+
 all_messages = get_messages(xml_data=MOMO_XML)
+
 
 class AllTransactions:
     """Extract all transactions"""

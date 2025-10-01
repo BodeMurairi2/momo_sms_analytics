@@ -2,16 +2,23 @@
 
 import re
 import xml.etree.ElementTree as ET
+from pathlib import Path
 from datetime import datetime
-from dsa.extract import TransactionMessages, get_messages
+from dsa.extract.extract import TransactionMessages, get_messages
 
-all_messages = get_messages(data=ET.parse("/home/bode-murairi/Documents/programming/ALU/momo_sms_analytics/api/data/momo.xml")) 
+# Dynamically determine the path to momo.xml relative to this script
+BASE_DIR = Path(__file__).resolve().parent
+MOMO_DATA_PATH = BASE_DIR / "momo.xml"
+MOMO_DATA = ET.parse(MOMO_DATA_PATH)
+
+all_messages = get_messages(data=MOMO_DATA)
 user_transaction = TransactionMessages(all_messages)
+
 
 class GetPayment:
     """This class extracts payment transaction information"""
-    def __init__(self):
-        self.transaction = user_transaction
+    def __init__(self, transaction=user_transaction):
+        self.transaction = transaction
     
     def get_payment(self):
         """Extract transaction info using regex"""
@@ -83,7 +90,5 @@ class GetPayment:
 
 
 if __name__ == "__main__":
-    all_messages = get_messages(data=ET.parse("/home/bode-murairi/Documents/programming/ALU/momo_sms_analytics/api/data/momo.xml")) 
-    user_transaction = TransactionMessages(all_messages)
     get_payment = GetPayment(transaction=user_transaction)
     print(get_payment.get_payment())

@@ -2,20 +2,20 @@
 
 """This script loads all the transactions"""
 
-import os
+from pathlib import Path
 from datetime import datetime
 from sqlalchemy.sql import func
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
-from data.database import Transaction
+from data.create_database.database import Transaction
 
-# Build DB absolute path
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "../data/databases/momo.db")
+# Dynamically determine the database path relative to this script
+BASE_DIR = Path(__file__).resolve().parent
+DB_PATH = BASE_DIR / "../data/create_database/databases/momo.db"
 
 # Create database engine with absolute path
-engine = create_engine(f"sqlite:///{os.path.abspath(DB_PATH)}")
+engine = create_engine(f"sqlite:///{DB_PATH.resolve()}")
 
 # Create a session factory
 Session = sessionmaker(bind=engine)
@@ -50,11 +50,10 @@ def get_transactions():
 
 def get_transaction(transaction_id: int):
     """Return a specific transaction"""
-
     if not isinstance(transaction_id, int):
         return {
             "status": "Failed",
-            "message": f"Transaction_id: {transaction_id} is not an Integer (eg. 5 10 20)"
+            "message": f"Transaction_id: {transaction_id} is not an Integer (eg. 5, 10, 20)"
         }
 
     transaction = session.query(Transaction).filter_by(transaction_id=transaction_id).first()
@@ -119,7 +118,7 @@ def get_transactions_filter(type=None, min_amount=None, max_amount=None):
 def get_transaction_limit(limit):
     """Get the most recent transactions limited by `limit`"""
     limit = int(limit)
-    results = session.query(Transaction).order_by(Transaction.timestamp.desc()).limit(limit).all()
+    results = session.query(Transaction).all()[:limit]
     return [{"status": "success"}] + [
         {
             "id": transaction.transaction_id,
@@ -135,11 +134,10 @@ def get_transaction_limit(limit):
         for transaction in results
     ]
 
+
 def create_transaction(data: dict):
     """Create a new transaction from a dictionary"""
-
     required_fields = ["type", "amount", "transaction_date"]
-
     missing_fields = [f for f in required_fields if f not in data]
     if missing_fields:
         return {
@@ -186,7 +184,6 @@ def create_transaction(data: dict):
 
 def replace_transaction(transaction_id: int, data: dict):
     """Replace a transaction completely"""
-
     if not isinstance(transaction_id, int):
         return {
             "status": "Failed",
@@ -246,7 +243,7 @@ def delete_transaction(transaction_id: int):
     """Delete a transaction"""
     if not isinstance(transaction_id, int):
         return {"status": "Failed",
-                "message": f"Impossible to delete a transaction. Id:{transaction_id} not an int (eg. 2 5 10)."}
+                "message": f"Impossible to delete a transaction. Id:{transaction_id} not an int (eg. 2, 5, 10)."}
 
     transaction = session.query(Transaction).filter_by(transaction_id=transaction_id).first()
     if not transaction:
@@ -257,3 +254,7 @@ def delete_transaction(transaction_id: int):
     session.commit()
     return {"status": "Success",
             "message": f"Record {transaction_id} deleted successfully"}
+
+
+if __name__ == "__main__":
+    print(get_transactions_summary())
