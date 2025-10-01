@@ -23,7 +23,6 @@ class SaveAllTransaction:
         """Save all transactions"""
         all_transaction = self.all_transaction.get_all_data()
 
-        # Use context manager to ensure session closes safely
         with Session() as session:
             for amount, transaction_type, transaction_datetime in zip(
                 all_transaction["amount"],
