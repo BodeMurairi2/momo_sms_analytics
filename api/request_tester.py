@@ -17,7 +17,7 @@ password = "bode200"
 try:
     # Send PUT request to /transactions/{id} with Basic Auth
     response = requests.post(
-        url=f"http://localhost:8000/transactions",
+        url=f"http://localhost:8000/transactions/{transaction_id=5}",
         json=transaction_data,
         auth=(email, password),
         timeout=30

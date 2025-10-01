@@ -33,7 +33,7 @@ class Authentication:
             first_name=self.user_data["first_name"],
             last_name=self.user_data["last_name"],
             phone_number=self.user_data["phone_number"],
-            email=self.user_data["email"],
+            email=self.user_data["email"].lower(),
             password_hash=password_hash
         )
         session.add(new_user)
@@ -46,7 +46,7 @@ class Authentication:
 
     def login(self, data: dict):
         """Login a user"""
-        find_user = session.query(Client).filter(Client.email == data["email"]).first()
+        find_user = session.query(Client).filter(Client.email == data["email"].lower()).first()
         if not find_user:
             return {
                 "status": "Failed",
