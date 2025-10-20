@@ -1,133 +1,211 @@
-# Urban_Mobility
+---
 
-Enterprise-level fullstack app for processing MoMo SMS data in XML.  
-Includes data cleaning, categorization, storage in a relational DB, and a frontend for analysis & visualization.  
-Focuses on Agile workflows, team setup, and system architecture.  
+# Momo SMS Analytics API
 
-Team: Summus Scriptus
- Date: 2025-09-09  
+[![Python](https://img.shields.io/badge/python-3.12-blue)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+This project provides access to transaction data from the `momo.xml` file and allows you to manage transactions via a RESTful API.
 
 ---
 
-## Oriantations
+## Table of Contents
 
- You will find the **ERD MOMO SMS Documentation file** and 
- the **Lucidchat Architecture Picture** in the directory named **"Documentation_file_and_ERD/"** 
- The mapping between SQL and Json is **"inside Documentation_file_and_ERD/"**
- The sql files and json example are **"inside scripts/**"
-
----
-
-# MoMo Insights Dashboard
-
-Transforming Mobile Money SMS into Meaningful Insights  
-
----
-
-## Project Overview
-This project demonstrates the design and development of an **enterprise-level fullstack application** for analyzing Mobile Money (MoMo) SMS data.  
-
-The system processes XML data, cleans and categorizes it, stores it in a relational database, and presents it on a **frontend dashboard** with tables and charts for easy analysis.  
-
-This project also emphasizes **collaborative workflows** through GitHub, Scrum, and Agile practices.  
-
----
-
-## Objectives
-- Parse and process MoMo SMS data in XML format.
-- Clean, normalize, and categorize transaction data.
-- Store processed data in a **relational database** (SQLite/MySQL).
-- Build a frontend dashboard to visualize and analyze financial activity.
-- Practice collaborative development with GitHub + Scrum board.
+* [Features](#features)
+* [Prerequisites](#prerequisites)
+* [Installation](#installation)
+* [Running the Server](#running-the-server)
+* [API Documentation](#api-documentation)
+* [Database Initialization](#database-initialization)
+* [Example API Requests](#example-api-requests)
+* [Contact](#contact)
+* [Contributing](#contributing)
+* [Authors](#authors)
 
 ---
 
 ## Features
-- **Backend (ETL pipeline):**
-  - Parse XML files from MoMo.
-  - Clean and normalize transaction data.
-  - Categorize transactions (Cash-In, Cash-Out, Payment, Airtime, Fees).
-  - Save to relational database.
-  - Export processed data to JSON for frontend use.
 
-- **Database:**
-  - SQLite/MySQL schema for structured data storage.
-  - Tables for transactions, logs, and categories.
-
-- **Frontend:**
-  - Clean HTML/CSS/JS dashboard interface.
-  - Interactive tables for browsing transaction history.
-  - Data visualizations (charts, trends, spending breakdowns).
-
-- **Collaboration:**
-  - GitHub repository for version control.
-  - Scrum board for task tracking.
-  - Agile workflow with backlog, sprint tasks, and deliverables.
+* Add, update, and delete mobile money transactions
+* View transaction summaries
+* API authentication with Basic Auth
+* Fully documented API endpoints
 
 ---
 
-## Architecture 
+## Prerequisites
 
-Miro url Link: **https://miro.com/welcomeonboard/Yk1vZDg0MkJpSEtRQkhYUGozOUNnNG9yamQ0S1FweHRYdEUwa0Q5YjFYSWZkUXJkamQ2bW9xTnNoS2QvYm9lVHJLL0U1Z3AvVVZ1VktVZ0I2MlZIV1czVmM0eTc3YVMxajR6MG91WDFpeFhmUnNzbGNCSFlOSUhsVHYzb1YxUnVBd044SHFHaVlWYWk0d3NxeHNmeG9BPT0hdjE=?share_link_id=52040591222**
-
----
-
-## Scrum Board Setup
-
-We use **GitHub Projects** for task management.
-[GitHub Project Board] https://github.com/users/BodeMurairi2/projects/1/views/1
-
-
-### Initial Columns
-
-* **To Do**
-* **In Progress**
-* **Done**
+* Python 3.10+
+* pip
+* Git
 
 ---
 
-## Contribution Workflow
+## Installation
 
-1. Fork & clone the repo.
-2. Create a new branch:
+1. **Clone the repository**
 
-   ```bash
-   git checkout -b feature/branch-name
-   ```
-3. Commit changes with meaningful messages:
+```bash
+git clone https://github.com/BodeMurairi2/momo_sms_analytics.git
+```
 
-   ```bash
-   git commit -m "Add XML parser module"
-   ```
-4. Push branch & open a Pull Request.
-5. Team reviews and merges PR into `main`.
+2. **Navigate to the API directory**
+
+```bash
+cd momo_sms_analytics/api/
+```
+
+3. **Create and activate a virtual environment**
+
+```bash
+python3 -m venv venv
+```
+
+* **Linux / macOS:**
+
+```bash
+source venv/bin/activate
+```
+
+* **Windows (CMD / Git Bash):**
+
+```bash
+.\venv\Scripts\activate
+# or
+source venv/Scripts/activate
+```
+
+4. **Install dependencies**
+
+```bash
+pip install -r requirements.txt
+```
 
 ---
 
-## Deliverables
+## Running the Server
 
-* GitHub repository (with team members added).
-* System architecture diagram file/image in repo.
-* Scrum board link in README.
-* Working frontend dashboard with processed MoMo data.
-* Documentation & unit tests.
+```bash
+python3 -m web.app
+```
 
----
+The server will be accessible at:
 
-## Contributors and Group Name
-
-This project is collaboratively developed by Summus Scriptus:
-
-* **Pascal Nsigo**
-* **Maurice Nshimyumukiza**
-* **Bode Murairi**
-
- Group Name: **Summus Scriptors**
- Date: **2025-09-09**  
+```
+http://127.0.0.1:8000
+```
 
 ---
 
-## License
+## API Documentation
 
-This project is developed for educational purposes under collaborative coursework.
-Feel free to reuse or extend for personal learning.
+Detailed instructions for all endpoints are in:
+
+```
+docs/api_docs.md
+```
+
+* Signup
+* Add a transaction
+* Replace a transaction
+* Delete a transaction
+* Summary endpoints
+
+---
+
+## Database Initialization
+
+If your database is empty or the browser does not display anything, inside api/ folder, run:
+
+```bash
+python3 -m data.create_database.create_database
+python3 -m data.save_database.save_all_transaction
+python3 -m data.save_database.save_income
+python3 -m data.save_database.save_expense
+```
+
+---
+
+## Example API Requests
+
+### Signup
+
+```bash
+curl -X POST http://localhost:8000/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "Bode",
+    "last_name": "Murairi",
+    "phone_number": "250795020998",
+    "email": "bodemurairi2@gmail.com",
+    "password": "Bode200"
+  }'
+```
+
+### Add a Transaction
+
+```bash
+curl -i -X POST http://localhost:8000/transactions \
+  -u "bodemurairi2@gmail.com:Bode200" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "payment",
+    "transaction_date": "2024-06-08 15:28",
+    "amount": 2500
+  }'
+```
+
+### Update a Transaction
+
+```bash
+curl -i -X PUT http://localhost:8000/transactions/5 \
+  -u "bodemurairi2@gmail.com:Bode200" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "payment",
+    "transaction_date": "2024-06-08 15:28",
+    "amount": 2500
+  }'
+```
+
+### Delete a Transaction
+
+```bash
+curl -i -X DELETE http://localhost:8000/transactions/5 \
+  -u "bodemurairi2@gmail.com:Bode200"
+```
+
+### Get Transaction Summary
+
+```bash
+curl -i -X GET http://127.0.0.1:8000/transactions/summary \
+  -u "bodemurairi2@gmail.com:Bode200"
+```
+```
+  Path to the test script: api/services/test_transactions.py
+```
+---
+
+## Contact
+
+For any issues or questions:
+
+* Pascal Louis Nsigo: [p.nsigo@alustudent.com](mailto:p.nsigo@alustudent.com)
+* Maurice Nshimyumukiza: [m.nshimyumu@alustudent.com](mailto:m.nshimyumu@alustudent.com)
+* Bode Murairi: [b.murairi@alustudent.com](mailto:b.murairi@alustudent.com)
+
+---
+
+## Contributing
+
+Contributions, suggestions, and feedback are always welcome! Feel free to submit issues or pull requests.
+
+---
+
+## Authors
+
+* Pascal Louis Nsigo: [p.nsigo@alustudent.com](mailto:p.nsigo@alustudent.com)
+* Bode Murairi: [b.murairi@alustudent.com](mailto:b.murairi@alustudent.com)
+* Maurice Nshimyumukiza: [m.nshimyumu@alustudent.com](mailto:m.nshimyumu@alustudent.com)
+
+---
