@@ -1,7 +1,3 @@
-Perfect! Here's a **modern, professional README** version for your project with badges, prerequisites, and example API requests:
-
----
-
 # Momo SMS Analytics API
 
 [![Python](https://img.shields.io/badge/python-3.12-blue)](https://www.python.org/)
