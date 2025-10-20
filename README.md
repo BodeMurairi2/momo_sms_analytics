@@ -1,9 +1,6 @@
----
-
 # Momo SMS Analytics API
 
 [![Python](https://img.shields.io/badge/python-3.12-blue)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 This project provides access to transaction data from the `momo.xml` file and allows you to manage transactions via a RESTful API.
 
